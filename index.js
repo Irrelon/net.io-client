@@ -522,7 +522,7 @@ NetIo.Client = NetIo.EventingClass.extend({
 			}
 		} else {
 			// The packet is normal data
-			this.emit('message', packet);
+			this.emit('message', [packet]);
 		}
 	},
 
