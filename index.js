@@ -501,7 +501,6 @@ NetIo.Client = NetIo.EventingClass.extend({
 		// Decode packet and emit message event
 		var packet = this._decode(data.data);
 		if (packet._netioCmd) {
-			console.log('netio packet', packet);
 			// The packet is a netio command
 			switch (packet._netioCmd) {
 				case 'id':
