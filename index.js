@@ -42,37 +42,39 @@ NetIo.Class = (function () {
 		 * Provides logging capabilities to all Class instances.
 		 */
 			log = function (text, type, obj) {
-			var indent = '',
-				i,
-				stack;
-			if (!NetIo._debug._trace.indentLevel) { NetIo._debug._trace.indentLevel = 0; }
+			if (NetIo._debug._enabled) {
+				var indent = '',
+					i,
+					stack;
+				if (!NetIo._debug._trace.indentLevel) { NetIo._debug._trace.indentLevel = 0; }
 
-			for (i = 0; i < NetIo._debug._trace.indentLevel; i++) {
-				indent += '  ';
-			}
-
-			type = type || 'log';
-
-			if (type === 'error') {
-				if (NetIo.stacks) {
-					if (NetIo._debug._node) {
-						stack = new Error().stack;
-						//console.log(color.magenta('Stack:'), color.red(stack));
-						console.log('Stack:', stack);
-					} else {
-						if (typeof(printStackTrace) === 'function') {
-							console.log('Stack:', printStackTrace().join('\n ---- '));
-						}
-					}
+				for (i = 0; i < NetIo._debug._trace.indentLevel; i++) {
+					indent += '  ';
 				}
 
-				if (NetIo._debug._throwErrors) {
-					throw(indent + 'Net.io *' + type + '* [' + (this._classId || this.prototype._classId) + '] : ' + text);
+				type = type || 'log';
+
+				if (type === 'error') {
+					if (NetIo.stacks) {
+						if (NetIo._debug._node) {
+							stack = new Error().stack;
+							//console.log(color.magenta('Stack:'), color.red(stack));
+							console.log('Stack:', stack);
+						} else {
+							if (typeof(printStackTrace) === 'function') {
+								console.log('Stack:', printStackTrace().join('\n ---- '));
+							}
+						}
+					}
+
+					if (NetIo._debug._throwErrors) {
+						throw(indent + 'Net.io *' + type + '* [' + (this._classId || this.prototype._classId) + '] : ' + text);
+					} else {
+						console.log(indent + 'Net.io *' + type + '* [' + (this._classId || this.prototype._classId) + '] : ' + text);
+					}
 				} else {
 					console.log(indent + 'Net.io *' + type + '* [' + (this._classId || this.prototype._classId) + '] : ' + text);
 				}
-			} else {
-				console.log(indent + 'Net.io *' + type + '* [' + (this._classId || this.prototype._classId) + '] : ' + text);
 			}
 
 			return this;
