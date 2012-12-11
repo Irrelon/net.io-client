@@ -7,14 +7,23 @@ var NetIo = {};
  * @private
  */
 NetIo._debug = {
-	node: typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined',
-	level: ['log', 'warning', 'error'],
-	stacks: false,
-	throwErrors: true,
-	trace: {
+	_enabled: true,
+	_node: typeof(module) !== 'undefined' && typeof(module.exports) !== 'undefined',
+	_level: ['log', 'warning', 'error'],
+	_stacks: false,
+	_throwErrors: true,
+	_trace: {
 		setup: false,
 		enabled: false,
 		match: ''
+	},
+	enabled: function (val) {
+		if (val !== undefined) {
+			this._enabled = val;
+			return this;
+		}
+
+		return this._enabled;
 	}
 };
 
@@ -36,17 +45,17 @@ NetIo.Class = (function () {
 			var indent = '',
 				i,
 				stack;
-			if (!NetIo._debug.trace.indentLevel) { NetIo._debug.trace.indentLevel = 0; }
+			if (!NetIo._debug._trace.indentLevel) { NetIo._debug._trace.indentLevel = 0; }
 
-			for (i = 0; i < NetIo._debug.trace.indentLevel; i++) {
+			for (i = 0; i < NetIo._debug._trace.indentLevel; i++) {
 				indent += '  ';
 			}
 
 			type = type || 'log';
 
 			if (type === 'error') {
-				if (NetIo._debug.stacks) {
-					if (NetIo._debug.node) {
+				if (NetIo.stacks) {
+					if (NetIo._debug._node) {
 						stack = new Error().stack;
 						//console.log(color.magenta('Stack:'), color.red(stack));
 						console.log('Stack:', stack);
@@ -57,7 +66,7 @@ NetIo.Class = (function () {
 					}
 				}
 
-				if (NetIo._debug.throwErrors) {
+				if (NetIo._debug._throwErrors) {
 					throw(indent + 'Net.io *' + type + '* [' + (this._classId || this.prototype._classId) + '] : ' + text);
 				} else {
 					console.log(indent + 'Net.io *' + type + '* [' + (this._classId || this.prototype._classId) + '] : ' + text);
